@@ -50,23 +50,25 @@ export function ProductPage() {
   }, []);
 
   return (
-    <div>
+    <div className="space-y-4">
       <b>Productos</b>
       <hr />
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-wrap gap-2 max-h-[80vh] overflow-auto p-4 ">
         {products.map((product) => (
           <div
             key={product.id}
-            className="flex gap-3 items-center border rounded"
+            className="flex flex-col  w-[15%] flex-grow  gap-3  bg-slate-200 rounded"
           >
-            <img src={product.thumbnail} className="size-[100px]" />
+            <img src={product.thumbnail} className="w-full" />
 
-            <div>
-              <p>{product.title}</p>
-              <p>$ {product.price}</p>
-              <p>stock: {product.stock}</p>
-              <p>category: {product.category}</p>
+            <div className="p-2 flex flex-col gap-2 items-start ">
+              <p className="font-semibold  ">{product.title}</p>
+              <p className="text-gray-600 font-bold">$ {product.price}</p>
+              <span className="px-3 py-1 rounded-md bg-gray-100 ">
+                {" "}
+                {product.category}
+              </span>
             </div>
           </div>
         ))}

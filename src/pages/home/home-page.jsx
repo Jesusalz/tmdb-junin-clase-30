@@ -1,9 +1,24 @@
 import { useState, useEffect } from "react";
 import { getAllProducts } from "./services";
 import { ProductList, Navbar } from "./components";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserLogged } from "../../services";
+import { setUserLogged } from "../../store/userSlice";
+import { Route, Routes } from "react-router-dom";
+import { AboutUsPage } from "./pages";
 export function HomePage() {
-  const [products, setProducts] = useState([]); // Estado donde voy a guaradar el listado de productos.
-
+  const dispatch = useDispatch();
+  const accessToken = localStorage.getItem("accessToken");
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (accessToken) {
+        const userLogged = await getUserLogged(accessToken);
+        dispatch(setUserLogged(userLogged.data));
+      }
+    };
+    fetchData();
+  }, []);
   useEffect(() => {
     // Tengo que hacer un efecto para solicitar la info.
     //creo la function para hacer el 'fetch' de la informacion. Recordemos, es una funcion async. usp trycatch
@@ -24,10 +39,13 @@ export function HomePage() {
     fetchData();
   }, []);
   return (
-    <div className="container  ">
+    <div className="   ">
       <Navbar />
-      <div className="mx-auto w-[80vw] pt-20 ">
-        <ProductList products={products} />
+      <div className="mx-auto  w-[80vw]  pt-20  ">
+        <Routes>
+          <Route path="/" element={<ProductList products={products} />} />
+          <Route path="/about-us" element={<AboutUsPage />} />
+        </Routes>
       </div>
     </div>
   );

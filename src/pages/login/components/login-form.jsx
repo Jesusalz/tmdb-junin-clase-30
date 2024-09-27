@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../services/login.service";
 import { message } from "antd";
+import { useDispatch } from "react-redux";
+import { setUserLogged } from "../../../store/userSlice";
 export function LoginForm() {
   const nav = useNavigate();
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,8 +24,10 @@ export function LoginForm() {
       }
       setIsLoading(true);
       const response = await login(data);
-      console.log("respuesta del Login", response);
-
+      const accessToken = response.data.backendTokens.accessToken;
+      console.log("respuesta del Login", response.data);
+      localStorage.setItem("accessToken", accessToken);
+      dispatch(setUserLogged(response.data.user));
       nav("/home");
     } catch (error) {
       message.error("Credenciales invalidas");

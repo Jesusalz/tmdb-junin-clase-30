@@ -24,8 +24,8 @@ export function LoginForm() {
       }
       setIsLoading(true);
       const response = await login(data);
-      const accessToken = response.data.backendTokens.accessToken;
       console.log("respuesta del Login", response.data);
+      const accessToken = response.data.backendTokens.accessToken;
       localStorage.setItem("accessToken", accessToken);
       dispatch(setUserLogged(response.data.user));
       nav("/home");

@@ -20,25 +20,31 @@ export function ProductList({ products = [] }) {
       {products.map((product) => (
         <div
           key={product.id}
-          className="flex flex-col  w-[200px] flex-grow  gap-3  bg-slate-100 rounded cursor-pointer hover:bg-slate-200 transition-all duration-150  "
+          className="flex flex-col  w-[200px] flex-grow  gap-3  bg-slate-50 rounded cursor-pointer hover:bg-slate-200 transition-all duration-150  "
         >
           <img src={product.thumbnail} className="w-3/4 mx-auto" />
 
-          <div className="p-2 flex flex-col gap-2 items-start justify-between  flex-grow ">
-            <p className="font-semibold text-sky-600  ">{product.title}</p>
-            <div className="flex justify-between w-full items-center bg-white rounded-md p-2">
-              <p className=" text-sky-700 font-semibold">$ {product.price}</p>
-              <span className="px-3  rounded-md bg-sky-400 text-xs font-semibold text-white ">
-                {" "}
-                {product.category}
-              </span>
+          <div className="p-2 flex flex-col gap-2 items-start    flex-grow ">
+            <p className="font-semibold text-sky-600 flex-grow  ">
+              {product.title}
+            </p>
+            <div className="w-full space-y-2">
+              <div className="flex justify-between w-full items-center bg-white rounded-md p-2">
+                <p className=" text-sky-700 font-semibold">$ {product.price}</p>
+                <span className="px-3  rounded-md bg-sky-400 text-xs font-semibold text-white ">
+                  {" "}
+                  {product.category}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-lg text-gray-800">
+                <button onClick={handleAddToCart}>
+                  <FaCartPlus />
+                </button>
+                <button onClick={() => nav(`/products/${product.id}`)}>
+                  <CgDetailsMore />
+                </button>
+              </div>
             </div>
-            <button onClick={handleAddToCart}>
-              <FaCartPlus className="text-xl" />
-            </button>
-            <button onClick={() => nav(`/products/${product.id}`)}>
-              <CgDetailsMore />
-            </button>
           </div>
         </div>
       ))}

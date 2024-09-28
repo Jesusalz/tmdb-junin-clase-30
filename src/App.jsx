@@ -13,7 +13,7 @@ import {
 
 function App() {
   return (
-    <main className=" ">
+    <main className="bg-[#f1f1f1]  ">
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/home/*" element={<HomePage />} />

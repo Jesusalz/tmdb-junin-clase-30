@@ -1,9 +1,26 @@
 import { useState, useEffect } from "react";
 import { getAllProducts } from "./services";
 import { ProductList, Navbar } from "./components";
+import { useDispatch } from "react-redux";
+import { getUserLogged } from "../../services";
+import { setUserLogged } from "../../store/userSlice";
+import { Route, Routes } from "react-router-dom";
+import { AboutUsPage } from "./pages";
+import { ProductDetailPage } from "../products";
 export function HomePage() {
-  const [products, setProducts] = useState([]); // Estado donde voy a guaradar el listado de productos.
+  const dispatch = useDispatch();
+  const accessToken = localStorage.getItem("accessToken");
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (accessToken) {
+        const userLogged = await getUserLogged(accessToken);
+        dispatch(setUserLogged(userLogged.data));
+      }
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
     // Tengo que hacer un efecto para solicitar la info.
@@ -28,18 +45,22 @@ export function HomePage() {
     fetchData();
   }, []);
   return (
-    <div className="container  ">
+    <div className=" h-screen  flex flex-col  ">
       <Navbar />
-      <div className="mx-auto w-[80vw] pt-20 ">
-        {loading ? (
-          <div className="flex flex-col items-center m-4 font-semibold text-gray-400">
-            <div className="size-10 border border-sky-500 border-l-0 rounded-full animate-spin"></div>
-            <span>Loading ..</span>
-          </div>
-        ) : (
-          <ProductList products={products} />
-        )}
-      </div>
+      {loading ? (
+        <div className="flex flex-col gap-2 items-center  mx-auto m-10 ">
+          <div className="size-8 border border-sky-500 rounded-full border-l-0 animate-spin" />
+          <span>Loading... </span>
+        </div>
+      ) : (
+        <div className="mx-auto  flex-grow   w-[80vw]   ">
+          <Routes>
+            <Route path="/" element={<ProductList products={products} />} />
+            <Route path="/about-us" element={<AboutUsPage />} />
+            <Route path="/products/:id" element={<ProductDetailPage />} />
+          </Routes>
+        </div>
+      )}
     </div>
   );
 }

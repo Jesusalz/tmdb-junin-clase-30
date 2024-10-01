@@ -1,15 +1,59 @@
-import React from "react";
+import Password from "antd/es/input/Password";
+import { data } from "autoprefixer";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { register } from "../services";
+import { message } from "antd";
 
 export function RegisterForm() {
   const nav = useNavigate();
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleInputChange = (e) => {
+    const key = e.target.name;
+    const value = e.target.value;
+
+    setData((prev) => ({ ...prev, [key]: value }));
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const registerData = {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    };
+
     try {
+      if (
+        data.email === "" ||
+        data.password === "" ||
+        data.confirmPassword === "" ||
+        data.name === ""
+      ) {
+        message.info("Faltan datos.");
+        return;
+      }
+
+      if (data.password !== data.confirmPassword) {
+        message.error("Las contraseñas no coinciden.");
+        return;
+      }
+      const response = await register(registerData);
+
       nav("/login");
+      message.success("ok");
     } catch (error) {
-      console.log("error at login", error);
+      if (error.status === 404) {
+        return message.error("El mail ya se encuentra registrado!");
+      }
+      message.error("Error al crear usuario, intantlo mas tarde!");
+      console.log("error STATS", error.status);
     }
   };
   return (
@@ -22,21 +66,33 @@ export function RegisterForm() {
           placeholder="User Name"
           type="text"
           className="border-none outline-none rounded-sm p-2"
+          onChange={handleInputChange}
+          name="name"
+          value={data.name}
         />
         <input
           placeholder="user@example.com"
           type="text"
           className="border-none outline-none rounded-sm p-2"
+          onChange={handleInputChange}
+          name="email"
+          value={data.email}
         />
         <input
           placeholder="Set password"
           type="password"
           className="border-none outline-none rounded-sm p-2"
+          onChange={handleInputChange}
+          name="password"
+          value={data.password}
         />
         <input
           placeholder="Confirm password"
           type="password"
           className="border-none outline-none rounded-sm p-2"
+          onChange={handleInputChange}
+          name="confirmPassword"
+          value={data.confirmPassword}
         />
       </div>
 

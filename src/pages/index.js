@@ -1,6 +1,7 @@
 export * from './home'
 export * from './landing'
 export * from './login'
+export * from './notFount'
 export * from './register'
 export * from './products'
 export * from './users'

@@ -11,6 +11,7 @@ export function HomePage() {
   const dispatch = useDispatch();
   const accessToken = localStorage.getItem("accessToken");
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       if (accessToken) {
@@ -20,7 +21,6 @@ export function HomePage() {
     };
     fetchData();
   }, []);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     // Tengo que hacer un efecto para solicitar la info.
@@ -47,13 +47,20 @@ export function HomePage() {
   return (
     <div className=" h-screen  flex flex-col  ">
       <Navbar />
-      <div className="mx-auto  flex-grow   w-[80vw]   ">
-        <Routes>
-          <Route path="/" element={<ProductList products={products} />} />
-          <Route path="/about-us" element={<AboutUsPage />} />
-          <Route path="/products/:id" element={<ProductDetailPage />} />
-        </Routes>
-      </div>
+      {loading ? (
+        <div className="flex flex-col gap-2 items-center  mx-auto m-10 ">
+          <div className="size-8 border border-sky-500 rounded-full border-l-0 animate-spin" />
+          <span>Loading... </span>
+        </div>
+      ) : (
+        <div className="mx-auto  flex-grow   w-[80vw]   ">
+          <Routes>
+            <Route path="/" element={<ProductList products={products} />} />
+            <Route path="/about-us" element={<AboutUsPage />} />
+            <Route path="/products/:id" element={<ProductDetailPage />} />
+          </Routes>
+        </div>
+      )}
     </div>
   );
 }

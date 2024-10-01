@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { getAllProducts } from "./services";
 import { ProductList, Navbar } from "./components";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getUserLogged } from "../../services";
 import { setUserLogged } from "../../store/userSlice";
 import { Route, Routes } from "react-router-dom";
 import { AboutUsPage } from "./pages";
+import { ProductDetailPage } from "../products";
 export function HomePage() {
   const dispatch = useDispatch();
   const accessToken = localStorage.getItem("accessToken");
@@ -39,12 +40,13 @@ export function HomePage() {
     fetchData();
   }, []);
   return (
-    <div className="   ">
+    <div className=" h-screen  flex flex-col  ">
       <Navbar />
-      <div className="mx-auto  w-[80vw]  pt-20  ">
+      <div className="mx-auto  flex-grow   w-[80vw]   ">
         <Routes>
           <Route path="/" element={<ProductList products={products} />} />
           <Route path="/about-us" element={<AboutUsPage />} />
+          <Route path="/products/:id" element={<ProductDetailPage />} />
         </Routes>
       </div>
     </div>

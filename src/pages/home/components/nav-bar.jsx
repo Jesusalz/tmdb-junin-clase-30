@@ -16,7 +16,7 @@ export function Navbar() {
     nav("/login");
   };
   return (
-    <nav className="flex items-center  justify-between gap-10 px-20 w-full h-20  bg-sky-600 text-white text-center fixed">
+    <nav className="flex items-center  justify-between gap-10 px-20 w-full h-20  bg-sky-600 text-white text-center ">
       <div>
         <img src="/landing.webp" className="size-20" />
       </div>

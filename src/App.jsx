@@ -20,7 +20,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/products" element={<ProductPage />} />
-        <Route path="/products/:id" element={<ProductDetailPage />} />
+
         <Route path="/users" element={<UserPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

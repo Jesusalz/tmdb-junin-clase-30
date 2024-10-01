@@ -16,7 +16,7 @@ export function ProductList({ products = [] }) {
     message.success("producto agregado al carrito!");
   };
   return (
-    <div className="flex flex-wrap gap-2 max-h-[100%] overflow-auto p-4  ">
+    <div className="flex flex-wrap gap-2 max-h-[100%] h-full overflow-auto p-4  ">
       {products.map((product) => (
         <div
           key={product.id}
@@ -40,7 +40,7 @@ export function ProductList({ products = [] }) {
                 <button onClick={handleAddToCart}>
                   <FaCartPlus />
                 </button>
-                <button onClick={() => nav(`/products/${product.id}`)}>
+                <button onClick={() => nav(`/home/products/${product.id}`)}>
                   <CgDetailsMore />
                 </button>
               </div>

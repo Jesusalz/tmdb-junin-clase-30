@@ -1,112 +1,113 @@
-import Password from "antd/es/input/Password";
-import { data } from "autoprefixer";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { register } from "../services";
-import { message } from "antd";
+import { registerUser } from "../../../services/auth.service"; 
+import { useNavigate } from "react-router-dom";
 
-export function RegisterForm() {
-  const nav = useNavigate();
-  const [data, setData] = useState({
+const RegisterForm = () => {
+  const [formData, setFormData] = useState({
     name: "",
+    username: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirmPassword: "", 
   });
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
-    const key = e.target.name;
-    const value = e.target.value;
-
-    setData((prev) => ({ ...prev, [key]: value }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    const registerData = {
-      name: data.name,
-      email: data.email,
-      password: data.password,
-    };
+   
+    if (formData.password !== formData.confirmPassword) {
+      setError("Las contraseñas no coinciden");
+      return;
+    }
 
     try {
-      if (
-        data.email === "" ||
-        data.password === "" ||
-        data.confirmPassword === "" ||
-        data.name === ""
-      ) {
-        message.info("Faltan datos.");
-        return;
-      }
-
-      if (data.password !== data.confirmPassword) {
-        message.error("Las contraseñas no coinciden.");
-        return;
-      }
-      const response = await register(registerData);
-
-      nav("/login");
-      message.success("ok");
+      await registerUser(formData);
+      navigate("/login"); 
     } catch (error) {
-      if (error.status === 404) {
-        return message.error("El mail ya se encuentra registrado!");
-      }
-      message.error("Error al crear usuario, intantlo mas tarde!");
-      console.log("error STATS", error.status);
+      console.error("Error durante el registro:", error);
+      setError(error.response.data);
+      console.log(error.response.data); 
     }
   };
-  return (
-    <form
-      className=" w-full flex flex-col gap-4 items-center"
-      onSubmit={handleSubmit}
-    >
-      <div className="flex flex-col gap-4 w-full">
-        <input
-          placeholder="User Name"
-          type="text"
-          className="border-none outline-none rounded-sm p-2"
-          onChange={handleInputChange}
-          name="name"
-          value={data.name}
-        />
-        <input
-          placeholder="user@example.com"
-          type="text"
-          className="border-none outline-none rounded-sm p-2"
-          onChange={handleInputChange}
-          name="email"
-          value={data.email}
-        />
-        <input
-          placeholder="Set password"
-          type="password"
-          className="border-none outline-none rounded-sm p-2"
-          onChange={handleInputChange}
-          name="password"
-          value={data.password}
-        />
-        <input
-          placeholder="Confirm password"
-          type="password"
-          className="border-none outline-none rounded-sm p-2"
-          onChange={handleInputChange}
-          name="confirmPassword"
-          value={data.confirmPassword}
-        />
-      </div>
 
-      <div className="flex flex-col gap-4 items-center">
-        <button className="bg-white px-4 py-1 rounded-md font-semibold text-blue-500">
-          Create account
-        </button>
-        <p className="text-white">
-          Already have an account?{" "}
-          <Link to={"/login"} className="underline font-semibold">
-            Log In
-          </Link>
-        </p>
+  return (
+    <form onSubmit={handleSubmit} style={{ maxWidth: "400px", margin: "0 auto", padding: "20px", border: "1px solid #ccc", borderRadius: "8px", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
+      <h2 style={{ textAlign: "center" }}>Registro</h2>
+      {error && <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>}
+      <div style={{ marginBottom: "10px" }}>
+        <label htmlFor="name">Nombre</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+          style={{ width: "100%", padding: "8px", marginTop: "5px", borderRadius: "4px", border: "1px solid #ccc" }}
+        />
       </div>
+      <div style={{ marginBottom: "10px" }}>
+        <label htmlFor="username">Nombre de usuario</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          required
+          style={{ width: "100%", padding: "8px", marginTop: "5px", borderRadius: "4px", border: "1px solid #ccc" }}
+        />
+      </div>
+      <div style={{ marginBottom: "10px" }}>
+        <label htmlFor="email">Correo electrónico</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          style={{ width: "100%", padding: "8px", marginTop: "5px", borderRadius: "4px", border: "1px solid #ccc" }}
+        />
+      </div>
+      <div style={{ marginBottom: "10px" }}>
+        <label htmlFor="password">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+          style={{ width: "100%", padding: "8px", marginTop: "5px", borderRadius: "4px", border: "1px solid #ccc" }}
+        />
+      </div>
+      <div style={{ marginBottom: "10px" }}>
+        <label htmlFor="confirmPassword">Repetir Contraseña</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          required
+          style={{ width: "100%", padding: "8px", marginTop: "5px", borderRadius: "4px", border: "1px solid #ccc" }}
+        />
+      </div>
+      <button type="submit" style={{ width: "100%", padding: "10px", backgroundColor: "#007bff", color: "#fff", border: "none", borderRadius: "4px", cursor: "pointer" }}>
+        Registrarse
+      </button>
     </form>
   );
-}
+};
+
+export default RegisterForm;
+

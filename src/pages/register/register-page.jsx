@@ -1,5 +1,6 @@
 import React from "react";
-import { RegisterForm } from "./components";
+import { RegisterForm } from './components';
+
 
 export function RegisterPage() {
   return (
@@ -16,3 +17,4 @@ export function RegisterPage() {
     </section>
   );
 }
+
